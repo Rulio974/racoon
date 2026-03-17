@@ -114,24 +114,50 @@
 
     .burger-btn {
       display: none;
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
       border: 1px solid rgba(195, 208, 172, 0.3);
-      background: rgba(183, 198, 160, 0.08);
+      background: rgba(183, 198, 160, 0.06);
       color: var(--ink-strong);
       cursor: pointer;
       align-items: center;
-      justify-items: center;
-      gap: 4px;
+      justify-content: center;
       padding: 0;
+      z-index: 2;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+      backdrop-filter: blur(6px);
     }
 
-    .burger-btn span {
-      width: 18px;
-      height: 2px;
-      border-radius: 999px;
-      background: currentColor;
+    .burger-svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .burger-close {
+      display: none;
+    }
+
+    .burger-btn:hover {
+      background: rgba(183, 198, 160, 0.13);
+      border-color: rgba(211, 222, 193, 0.58);
+      box-shadow: 0 8px 22px rgba(8, 14, 11, 0.2);
+    }
+
+    .burger-btn:active {
+      transform: scale(0.96);
+    }
+
+    .burger-btn.is-open .burger-open {
+      display: none;
+    }
+
+    .burger-btn.is-open .burger-close {
       display: block;
     }
 
@@ -723,14 +749,17 @@
       }
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 980px) {
       .nav {
         display: none;
       }
 
       .burger-btn {
-        display: inline-grid;
+        display: inline-flex;
       }
+    }
+
+    @media (max-width: 720px) {
 
       .stage {
         width: min(88vw, 510px);
@@ -774,9 +803,12 @@
         <a href="#contact">Contact</a>
       </nav>
       <button class="burger-btn" id="burgerBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span>
-        <span></span>
-        <span></span>
+        <svg class="burger-svg burger-open" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+        <svg class="burger-svg burger-close" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6l-12 12"></path>
+        </svg>
       </button>
     </div>
   </header>
@@ -1218,6 +1250,7 @@
     function setMenuState(open) {
       if (!mobileMenu || !burgerBtn) return;
       mobileMenu.classList.toggle("is-open", open);
+      burgerBtn.classList.toggle("is-open", open);
       mobileMenu.setAttribute("aria-hidden", open ? "false" : "true");
       burgerBtn.setAttribute("aria-expanded", open ? "true" : "false");
       document.body.style.overflow = open ? "hidden" : "";
