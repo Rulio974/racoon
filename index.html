@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Racoon Airsoft Association</title>
+  <style>
+    @font-face {
+      font-family: "AllertaStencil";
+      src: url("./AllertaStencil-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #344e41;
+      --bg-soft: #3d5a4d;
+      --panel: #2c4438;
+      --panel-soft: #425f52;
+      --line: rgba(195, 208, 172, 0.2);
+      --ink: #b7c6a0;
+      --ink-strong: #d3dec1;
+      --ink-muted: #a7b89a;
+      --ink-dark: #2f453a;
+      --danger: #d98f8f;
+      --shadow: 0 20px 42px rgba(13, 22, 18, 0.25);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+      background: rgba(34, 52, 44, 0.7);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-strong);
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 22px;
+      object-fit: contain;
+      opacity: 0.95;
+      filter: brightness(1.08) contrast(1.02);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(8px, 2vw, 20px);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.92rem;
+      color: var(--ink-muted);
+    }
+
+    .nav a {
+      transition: color 180ms ease;
+    }
+
+    .nav a:hover {
+      color: var(--ink-strong);
+    }
+
+    .section-shell {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      padding-top: 70px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("./IMG_0392-2400x1200.jpg") center center / cover no-repeat;
+      opacity: 0.09;
+      filter: saturate(0.85) contrast(0.92);
+      z-index: -3;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(61, 90, 77, 0.15), rgba(52, 78, 65, 0.56) 64%, rgba(35, 54, 45, 0.72)),
+        linear-gradient(180deg, rgba(26, 40, 34, 0.12), rgba(26, 40, 34, 0.45));
+      z-index: -2;
+    }
+
+    .hero-content {
+      width: min(92vw, 820px);
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      text-align: center;
+      padding: clamp(20px, 5vw, 50px) 16px;
+    }
+
+    .logo-aura {
+      position: absolute;
+      width: min(62vw, 620px);
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle, rgba(195, 208, 172, 0.16), rgba(195, 208, 172, 0) 66%);
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .stage {
+      width: min(70vw, 530px);
+      display: grid;
+      place-items: center;
+      cursor: crosshair;
+      transition: filter 280ms ease;
+    }
+
+    .logo-wrap {
+      width: 100%;
+      aspect-ratio: 3415 / 2723;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 10px 22px rgba(20, 30, 26, 0.38));
+    }
+
+    .logo-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .pupil {
+      transform-box: fill-box;
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .hero-kicker {
+      margin: 0;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: clamp(2.4rem, 8.6vw, 5.6rem);
+      font-family: "AllertaStencil", Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.24em;
+      color: var(--ink);
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(20, 30, 26, 0.22);
+      line-height: 1;
+    }
+
+    .hero-sub {
+      margin: 4px 0 6px;
+      max-width: 66ch;
+      color: var(--ink-muted);
+      font-size: 1rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, border-color 180ms ease;
+    }
+
+    .btn-primary {
+      color: var(--ink-dark);
+      background: var(--ink);
+      box-shadow: 0 8px 20px rgba(14, 23, 19, 0.24);
+    }
+
+    .btn-secondary {
+      color: var(--ink-strong);
+      background: rgba(183, 198, 160, 0.08);
+      border-color: var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    section.content {
+      padding: clamp(58px, 8vw, 88px) 0;
+      border-top: 1px solid rgba(195, 208, 172, 0.12);
+      position: relative;
+    }
+
+    .content h2 {
+      margin: 0;
+      color: var(--ink-strong);
+      letter-spacing: 0.02em;
+      font-size: clamp(1.65rem, 3vw, 2.4rem);
+    }
+
+    .content p.lead {
+      margin: 10px 0 0;
+      color: var(--ink-muted);
+      max-width: 70ch;
+    }
+
+    .about-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(183, 198, 160, 0.07), rgba(183, 198, 160, 0.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .stat {
+      border: 1px solid rgba(183, 198, 160, 0.16);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(183, 198, 160, 0.03);
+    }
+
+    .stat b {
+      display: block;
+      color: var(--ink-strong);
+      font-size: 1.45rem;
+    }
+
+    .cards-4 {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: rgba(183, 198, 160, 0.04);
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(195, 208, 172, 0.38);
+    }
+
+    .card h3 {
+      margin: 8px 0;
+      color: var(--ink-strong);
+      font-size: 1.05rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(195, 208, 172, 0.28);
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: var(--ink-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .terrain-list {
+      margin-top: 28px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .terrain {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .terrain:nth-child(even) .terrain-media {
+      order: 2;
+    }
+
+    .terrain-media {
+      border-radius: 14px;
+      overflow: hidden;
+      min-height: 240px;
+      position: relative;
+      border: 1px solid var(--line);
+      background: #1f3128;
+    }
+
+    .terrain-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.82) contrast(0.95);
+      opacity: 0.72;
+    }
+
+    .terrain-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(25, 40, 33, 0.05), rgba(25, 40, 33, 0.5));
+    }
+
+    .terrain-info {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: rgba(183, 198, 160, 0.03);
+      display: grid;
+      gap: 10px;
+    }
+
+    .terrain-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .meta-pill {
+      padding: 5px 10px;
+      border: 1px solid rgba(195, 208, 172, 0.25);
+      border-radius: 999px;
+      color: var(--ink-muted);
+      font-size: 0.78rem;
+    }
+
+    .security-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .timeline-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(195, 208, 172, 0.45);
+      display: grid;
+      place-items: center;
+      color: var(--ink-strong);
+      font-size: 0.78rem;
+    }
+
+    .checklist {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--ink-muted);
+      display: grid;
+      gap: 8px;
+    }
+
+    .gallery-grid {
+      margin-top: 26px;
+      columns: 3 260px;
+      column-gap: 14px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: #21362d;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      opacity: 0.76;
+      filter: saturate(0.86) contrast(0.94);
+    }
+
+    .gallery-item span {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      font-size: 0.78rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(195, 208, 172, 0.38);
+      background: rgba(22, 34, 29, 0.7);
+      color: var(--ink-strong);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .pricing-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .price-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: rgba(183, 198, 160, 0.03);
+      display: grid;
+      gap: 12px;
+    }
+
+    .price-card.featured {
+      background: linear-gradient(180deg, rgba(183, 198, 160, 0.12), rgba(183, 198, 160, 0.04));
+      border-color: rgba(195, 208, 172, 0.45);
+      transform: translateY(-5px);
+    }
+
+    .price {
+      color: var(--ink-strong);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .faq {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: rgba(183, 198, 160, 0.03);
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--ink-strong);
+      font-weight: 600;
+    }
+
+    details p {
+      margin: 8px 0 0;
+      color: var(--ink-muted);
+    }
+
+    .contact-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      color: var(--ink-muted);
+      font-size: 0.86rem;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: rgba(183, 198, 160, 0.06);
+      border: 1px solid rgba(195, 208, 172, 0.24);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--ink-strong);
+      font: inherit;
+    }
+
+    .field textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 26px 0 40px;
+      color: var(--ink-muted);
+    }
+
+    .footer-grid {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .muted {
+      color: var(--ink-muted);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 560ms ease, transform 560ms ease;
+    }
+
+    [data-reveal].in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+
+      .about-grid,
+      .security-grid,
+      .contact-grid,
+      .terrain,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .terrain:nth-child(even) .terrain-media {
+        order: 0;
+      }
+
+      .cards-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-card.featured {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        display: none;
+      }
+
+      .stage {
+        width: min(88vw, 510px);
+      }
+
+      .brand {
+        letter-spacing: 0.16em;
+      }
+
+      .cards-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#accueil" class="brand-mini">
+        <img src="./Groupe.svg" alt="" class="brand-icon" aria-hidden="true" />
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#apropos">Association</a>
+        <a href="#activites">Activites</a>
+        <a href="#terrains">Terrains</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#adhesion">Adhesion</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="accueil">
+      <div class="hero-content">
+        <div class="logo-aura" aria-hidden="true"></div>
+        <section class="stage" aria-label="Logo raton laveur anime">
+          <div class="logo-wrap" id="logoWrap" aria-label="Logo raton laveur anime">
+            <svg width="100%" height="100%" viewBox="0 0 3415 2723" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+              style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+              <g transform="matrix(1,0,0,1,-1335.540741,-21701.827294)">
+                <g>
+                  <g id="Corps" transform="matrix(1.139879,0,0,1.139879,-10030.037686,10314.975577)">
+                    <path
+                      d="M11456.949,12328.962L10428.907,12333.206C10428.907,12333.206 10007.303,11817.623 10015.395,11803.324C10039.021,11761.574 10343.918,11084.071 10361.253,11053.1C10384.775,11011.076 10788.328,10389.637 11456.432,10393.886"
+                      style="fill:rgb(163,177,138);fill-opacity:0;" />
+                    <path
+                      d="M11456.949,12328.962L10428.907,12333.206C10428.907,12333.206 10007.303,11817.623 10015.395,11803.324C10039.021,11761.574 10343.918,11084.071 10361.253,11053.1C10384.775,11011.076 10788.328,10389.637 11456.432,10393.886"
+                      style="fill:none;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(-1.139879,0,0,1.139879,16086.457686,10295.834561)">
+                    <path
+                      d="M11780.394,10437.381C11780.394,10437.381 11922.242,10295.979 11953.275,10268.326C12006.4,10220.988 12294.659,9987.042 12497.076,10067.389C12637.657,10123.192 12667.172,10330.013 12665.988,10514.299C12664.302,10776.921 12561.35,11065.638 12561.35,11065.638C12561.35,11065.638 12492.96,10890.388 12210.366,10669.963C11948.369,10465.604 11780.394,10437.381 11780.394,10437.381Z"
+                      style="fill:white;fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(1.139879,0,0,1.139879,-10030.037686,10314.975577)">
+                    <path
+                      d="M10930.66,10501.256C10930.66,10501.256 10789.978,10601.091 10699.361,10675.203C10579.653,10773.109 10504.609,10831.771 10504.609,10831.771C10504.609,10831.771 10363.847,10329.997 10500.386,10276.657C10639.861,10222.169 10894.526,10453.909 10930.66,10501.256Z"
+                      style="fill:rgb(41,44,49);fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(1.139879,0,0,1.139879,-10010.409004,10312.982087)">
+                    <path
+                      d="M10239.916,12112.577C10239.916,12112.577 10426.31,11932.606 10606.405,11889.903C10786.501,11847.2 10935.901,11808.406 11010.042,11783.331C11333.011,11674.097 11446.874,11279.127 10914.786,11139.452C10728.675,11090.597 10636.859,11160.551 10379.893,11234.996C10305.719,11256.485 10286.437,11241.412 10286.437,11241.412L10016.114,11808.92L10239.916,12112.577Z"
+                      style="fill:white;fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(1.071107,0,0,1.064775,-9320.287979,11162.05994)">
+                    <path
+                      d="M10584.465,11404.616C10582.58,11385.977 10847.063,11361.396 11024.865,11391.3C11083.779,11401.208 11120.198,11413.482 11159.541,11447.978C11186.58,11471.685 11174.077,11522.312 11140.475,11558.409C11106.976,11594.394 11057.615,11625.188 11001.267,11639.935C10970.339,11648.03 10850.35,11673.91 10810.424,11577.899C10777.989,11499.899 10775.041,11457.728 10775.041,11443.469C10775.041,11429.21 10587.218,11431.833 10584.465,11404.616Z"
+                      style="fill:rgb(163,177,138);stroke:rgb(163,177,138);stroke-width:94.81px;" />
+                  </g>
+                  <g id="Corps1" serif:id="Corps" transform="matrix(-1.139879,0,0,1.139879,16116.090935,10314.975577)">
+                    <path
+                      d="M11456.949,12328.962L10428.907,12333.206C10428.907,12333.206 10007.303,11817.623 10015.395,11803.324C10039.021,11761.574 10343.918,11084.071 10361.253,11053.1C10384.775,11011.076 10788.328,10389.637 11456.432,10393.886"
+                      style="fill:white;fill-opacity:0;" />
+                    <path
+                      d="M11456.949,12328.962L10428.907,12333.206C10428.907,12333.206 10007.303,11817.623 10015.395,11803.324C10039.021,11761.574 10343.918,11084.071 10361.253,11053.1C10384.775,11011.076 10788.328,10389.637 11456.432,10393.886"
+                      style="fill:none;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(1.139879,0,0,1.139879,-10000.404436,10295.834561)">
+                    <path
+                      d="M11780.394,10437.381C11780.394,10437.381 11922.242,10295.979 11953.275,10268.326C12006.4,10220.988 12294.659,9987.042 12497.076,10067.389C12637.657,10123.192 12667.172,10330.013 12665.988,10514.299C12664.302,10776.921 12561.35,11065.638 12561.35,11065.638C12561.35,11065.638 12492.96,10890.388 12210.366,10669.963C11948.369,10465.604 11780.394,10437.381 11780.394,10437.381Z"
+                      style="fill:rgb(174,81,81);fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(-1.139879,0,0,1.139879,16116.090935,10314.975577)">
+                    <path
+                      d="M10930.66,10501.256C10930.66,10501.256 10789.978,10601.091 10699.361,10675.203C10579.653,10773.109 10504.609,10831.771 10504.609,10831.771C10504.609,10831.771 10363.847,10329.997 10500.386,10276.657C10639.861,10222.169 10894.526,10453.909 10930.66,10501.256Z"
+                      style="fill:rgb(41,44,49);fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(-1.139879,0,0,1.139879,16096.462254,10312.982087)">
+                    <path
+                      d="M10233.283,12112.577C10233.283,12112.577 10426.31,11932.606 10606.405,11889.903C10786.501,11847.2 10935.901,11808.406 11010.042,11783.331C11333.011,11674.097 11446.874,11279.127 10914.786,11139.452C10728.675,11090.597 10636.859,11160.551 10379.893,11234.996C10305.719,11256.485 10286.437,11241.412 10286.437,11241.412L10016.114,11808.92L10233.283,12112.577Z"
+                      style="fill:white;fill-opacity:0;stroke:rgb(163,177,138);stroke-width:88.83px;" />
+                  </g>
+                  <g transform="matrix(-1.071107,0,0,1.064775,15397.845047,11153.746864)">
+                    <path
+                      d="M10584.465,11404.616C10582.58,11385.977 10847.063,11361.396 11024.865,11391.3C11083.779,11401.208 11120.198,11413.482 11159.541,11447.978C11186.58,11471.685 11174.077,11522.312 11140.475,11558.409C11106.976,11594.394 11057.615,11625.188 11001.267,11639.935C10970.339,11648.03 10850.35,11673.91 10810.424,11577.899C10777.989,11499.899 10775.041,11457.728 10775.041,11443.469C10775.041,11429.21 10587.218,11431.833 10584.465,11404.616Z"
+                      style="fill:rgb(163,177,138);stroke:rgb(163,177,138);stroke-width:94.81px;" />
+                  </g>
+                  <g transform="matrix(0.906264,0,0,0.847243,-3054.861535,4024.017986)">
+                    <ellipse cx="7495.637" cy="22839.012" rx="57.835" ry="55.353" style="fill:rgb(52,78,65);" />
+                  </g>
+                  <g transform="matrix(1.748695,0,0,1.861158,-10560.184371,-19099.327306)">
+                    <ellipse cx="7495.637" cy="22839.012" rx="57.835" ry="55.353"
+                      style="fill:rgb(52,78,65);fill-opacity:0.98;" />
+                  </g>
+                  <g transform="matrix(1.748695,0,0,1.861158,-9369.414457,-19099.327306)">
+                    <ellipse cx="7495.637" cy="22839.012" rx="57.835" ry="55.353"
+                      style="fill:rgb(52,78,65);fill-opacity:0.98;" />
+                  </g>
+                  <g id="Nez" transform="matrix(1.16648,-0.006729,0.006065,1.051411,-10392.449409,11470.971439)">
+                    <path
+                      d="M11444.582,12193.657C11430.969,12193.696 11417.43,12181.323 11417.634,12156.678C11418.03,12108.751 11418.309,12026.769 11418.309,12026.769C11418.309,12026.769 11358.226,11987.354 11311.859,11926.657C11229.879,11819.341 11234.281,11696.412 11447.051,11697.676"
+                      style="fill:rgb(163,177,138);stroke:rgb(163,177,138);stroke-width:25.89px;" />
+                  </g>
+                  <g id="Nez1" serif:id="Nez"
+                    transform="matrix(-1.16648,-0.006729,-0.006065,1.051411,16451.436706,11470.971439)">
+                    <path
+                      d="M11444.582,12193.657C11430.969,12193.696 11417.43,12181.323 11417.634,12156.678C11418.03,12108.751 11418.309,12026.769 11418.309,12026.769C11418.309,12026.769 11358.226,11987.354 11311.859,11926.657C11229.879,11819.341 11234.281,11696.412 11447.051,11697.676"
+                      style="fill:rgb(163,177,138);stroke:rgb(163,177,138);stroke-width:25.89px;" />
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </section>
+        <p class="hero-kicker">Association airsoft - Team operationnelle</p>
+        <h1 class="brand">Racoon</h1>
+        <p class="hero-sub">
+          Team associative orientee scenario, progression technique et securite. Nous organisons des sessions encadrees,
+          des evenements inter-teams et des parcours d'integration pour nouveaux joueurs.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#contact">Nous rejoindre</a>
+          <a class="btn btn-secondary" href="#activites">Decouvrir nos activites</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="apropos">
+      <div class="section-shell" data-reveal>
+        <h2>Qui sommes-nous ?</h2>
+        <p class="lead">
+          Racoon Team est une association airsoft fictive basee sur un cadre clair : discipline, progression, fair-play
+          et immersion. Chaque session est structuree pour offrir du jeu intense sans sacrifier la securite.
+        </p>
+
+        <div class="about-grid">
+          <article class="panel">
+            <h3>Notre mission</h3>
+            <p class="muted">
+              Proposer une experience airsoft premium et accessible. Nous accompagnons les debutants, nous consolidons
+              les acquis des joueurs confirmes, et nous organisons des operations scenarisees sur des terrains varies.
+            </p>
+            <p class="muted">
+              L'association fonctionne autour de poles clairs: formation, operation, logistique et arbitres securite.
+              Objectif: un jeu propre, lisible et intense pour toutes les equipes.
+            </p>
+          </article>
+
+          <aside class="panel">
+            <h3>Chiffres clefs</h3>
+            <div class="stats">
+              <div class="stat"><b>48</b>Membres actifs</div>
+              <div class="stat"><b>36</b>Sessions annuelles</div>
+              <div class="stat"><b>7</b>Terrains partenaires</div>
+              <div class="stat"><b>100%</b>Brief securite obligatoire</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="activites">
+      <div class="section-shell" data-reveal>
+        <h2>Categories d'activites</h2>
+        <p class="lead">Des formats de jeu complementaires pour progresser techniquement et garder une dynamique
+          collective.</p>
+
+        <div class="cards-4">
+          <article class="card">
+            <span class="badge">Training</span>
+            <h3>Entrainements tactiques</h3>
+            <p class="muted">Ateliers movement, communication radio, progression en binome et lecture de terrain.</p>
+          </article>
+          <article class="card">
+            <span class="badge">Milsim</span>
+            <h3>Scenarios immersifs</h3>
+            <p class="muted">Operations objectives multi-phases avec roles, contraintes logistiques et extraction
+              finale.</p>
+          </article>
+          <article class="card">
+            <span class="badge">Event</span>
+            <h3>Inter-teams</h3>
+            <p class="muted">Rencontres mensuelles avec teams invitees, arbitrage neutre et rotation de formats.</p>
+          </article>
+          <article class="card">
+            <span class="badge">Onboarding</span>
+            <h3>Initiation nouveaux</h3>
+            <p class="muted">Parcours d'entree progressif: equipement, regles, securite, premiers scenarii encadres.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="terrains">
+      <div class="section-shell" data-reveal>
+        <h2>Nos terrains</h2>
+        <p class="lead">Des environnements complementaires pour varier les rythmes de jeu et les intentions tactiques.
+        </p>
+
+        <div class="terrain-list">
+          <article class="terrain">
+            <figure class="terrain-media">
+              <img src="https://picsum.photos/seed/racoon-forest-1/1000/640" alt="Terrain forestier fictif"
+                loading="lazy" />
+            </figure>
+            <div class="terrain-info">
+              <h3>Bois de la Source</h3>
+              <p class="muted">Terrain boise dense avec lignes de vue courtes. Ideal pour travail de communication et
+                split de squad.</p>
+              <div class="terrain-meta">
+                <span class="meta-pill">14 km</span>
+                <span class="meta-pill">Foret dense</span>
+                <span class="meta-pill">Niveau intermediaire</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="terrain">
+            <figure class="terrain-media">
+              <img src="https://picsum.photos/seed/racoon-urban-2/1000/640" alt="Zone urbaine fictive" loading="lazy" />
+            </figure>
+            <div class="terrain-info">
+              <h3>Zone Delta 19</h3>
+              <p class="muted">Bloc semi-urbain avec batiments, couloirs et points hauts. Formats CQB et extraction VIP.
+              </p>
+              <div class="terrain-meta">
+                <span class="meta-pill">27 km</span>
+                <span class="meta-pill">Semi-urbain</span>
+                <span class="meta-pill">Niveau confirme</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="terrain">
+            <figure class="terrain-media">
+              <img src="https://picsum.photos/seed/racoon-open-3/1000/640" alt="Terrain ouvert fictif" loading="lazy" />
+            </figure>
+            <div class="terrain-info">
+              <h3>Plaine Echo</h3>
+              <p class="muted">Grand format ouvert avec points de couverture rares. Bon terrain pour lecture, tempo et
+                positionnement.</p>
+              <div class="terrain-meta">
+                <span class="meta-pill">21 km</span>
+                <span class="meta-pill">Open field</span>
+                <span class="meta-pill">Tous niveaux</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="securite">
+      <div class="section-shell" data-reveal>
+        <h2>Equipement & securite</h2>
+        <p class="lead">Un protocole simple, strict et repetable pour garantir un jeu propre et confortable.</p>
+
+        <div class="security-grid">
+          <article class="panel">
+            <h3>Process session</h3>
+            <div class="timeline">
+              <div class="timeline-item"><span class="timeline-dot">1</span>
+                <div><b>Check in</b>
+                  <p class="muted">Verification repliques, chrony, protections et role de chaque joueur.</p>
+                </div>
+              </div>
+              <div class="timeline-item"><span class="timeline-dot">2</span>
+                <div><b>Brief mission</b>
+                  <p class="muted">Objectifs, zones interdites, medics, respawn et canaux radio.</p>
+                </div>
+              </div>
+              <div class="timeline-item"><span class="timeline-dot">3</span>
+                <div><b>Run operation</b>
+                  <p class="muted">Arbitrage en jeu, points de controle securite et recadrage terrain.</p>
+                </div>
+              </div>
+              <div class="timeline-item"><span class="timeline-dot">4</span>
+                <div><b>Debrief final</b>
+                  <p class="muted">Retour collectif, progression, axes de travail pour la prochaine sortie.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="panel">
+            <h3>Checklist obligatoire</h3>
+            <ul class="checklist">
+              <li>Lunettes balistiques certifiees et protection faciale.</li>
+              <li>Passage chrony avant chaque scenario.</li>
+              <li>Signalisation claire des hits et distance de securite respectee.</li>
+              <li>Hydratation, trousse de secours et radio fonctionnelle.</li>
+              <li>Respect strict des arbitres et du cadre associatif.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="galerie">
+      <div class="section-shell" data-reveal>
+        <h2>Galerie</h2>
+        <p class="lead">Extraits visuels fictifs de sessions, entrainements et operations scenarisees.</p>
+        <div class="gallery-grid">
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-1/600/740"
+              alt="Photo fictive airsoft 1" loading="lazy" /><span>Briefing</span></figure>
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-2/600/460"
+              alt="Photo fictive airsoft 2" loading="lazy" /><span>Progression</span></figure>
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-3/600/680"
+              alt="Photo fictive airsoft 3" loading="lazy" /><span>Milsim</span></figure>
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-4/600/520"
+              alt="Photo fictive airsoft 4" loading="lazy" /><span>CQB</span></figure>
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-5/600/760"
+              alt="Photo fictive airsoft 5" loading="lazy" /><span>Extraction</span></figure>
+          <figure class="gallery-item"><img src="https://picsum.photos/seed/racoon-gallery-6/600/490"
+              alt="Photo fictive airsoft 6" loading="lazy" /><span>Teamplay</span></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="adhesion">
+      <div class="section-shell" data-reveal>
+        <h2>Tarifs & adhesion</h2>
+        <p class="lead">Formules fictives pour illustrer une page vitrine complete d'association.</p>
+        <div class="pricing-grid">
+          <article class="price-card">
+            <span class="badge">Decouverte</span>
+            <h3>Pack Rookie</h3>
+            <div class="price">25EUR</div>
+            <p class="muted">Session d'essai, encadrement complet, briefing securite et materiel de base.</p>
+            <a class="btn btn-secondary" href="#contact">Reserver</a>
+          </article>
+          <article class="price-card featured">
+            <span class="badge">Membre</span>
+            <h3>Pack Operateur</h3>
+            <div class="price">90EUR</div>
+            <p class="muted">Acces mensuel sessions, priorite evenements, reduction inter-teams et coaching.</p>
+            <a class="btn btn-primary" href="#contact">Devenir membre</a>
+          </article>
+          <article class="price-card">
+            <span class="badge">Squad</span>
+            <h3>Pack Equipe</h3>
+            <div class="price">220EUR</div>
+            <p class="muted">Inscription groupe, scenario prive, encadrement arbitres et debrief tactical.</p>
+            <a class="btn btn-secondary" href="#contact">Nous contacter</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="faq">
+      <div class="section-shell" data-reveal>
+        <h2>FAQ</h2>
+        <p class="lead">Questions frequentes d'une association airsoft (contenu fictif).</p>
+        <div class="faq">
+          <details>
+            <summary>Quel est l'age minimum pour participer ?</summary>
+            <p>A partir de 18 ans, ou 16 ans avec autorisation parentale et format adapte.</p>
+          </details>
+          <details>
+            <summary>Je debute, dois-je avoir mon equipement ?</summary>
+            <p>Non, un kit d'initiation est prevu pour les premieres sessions.</p>
+          </details>
+          <details>
+            <summary>Comment se passe le controle securite ?</summary>
+            <p>Chrony, verification EPI, briefing obligatoire et rappel des distances d'engagement.</p>
+          </details>
+          <details>
+            <summary>Peut-on venir en equipe deja constituee ?</summary>
+            <p>Oui, nous accueillons aussi des squads externes sur des formats inter-teams.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="contact">
+      <div class="section-shell" data-reveal>
+        <h2>Contact & pre-inscription</h2>
+        <p class="lead">Une demande suffit pour recevoir planning, reglement interieur et disponibilites.</p>
+        <div class="contact-grid">
+          <article class="panel">
+            <h3>Formulaire (demo)</h3>
+            <form>
+              <div class="field">
+                <label for="name">Nom complet</label>
+                <input id="name" type="text" placeholder="Alex Martin" />
+              </div>
+              <div class="field">
+                <label for="mail">Email</label>
+                <input id="mail" type="email" placeholder="alex@email.com" />
+              </div>
+              <div class="field">
+                <label for="level">Niveau</label>
+                <select id="level">
+                  <option>Debutant</option>
+                  <option>Intermediaire</option>
+                  <option>Confirme</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="msg">Message</label>
+                <textarea id="msg" placeholder="Je souhaite participer a une session d'essai..."></textarea>
+              </div>
+              <button class="btn btn-primary" type="button">Envoyer la demande</button>
+            </form>
+          </article>
+          <aside class="panel">
+            <h3>Infos association</h3>
+            <p class="muted">Racoon Team Association (fictive)</p>
+            <p class="muted">Secteur Nord-Est - Bases forestieres et zones CQB partenaires.</p>
+            <p class="muted">Disponibilites: weekends + soirees scenario mensuelles.</p>
+            <p class="muted">Contact rapide: +33 6 00 00 00 00</p>
+            <p class="muted">Mail: contact@racoon-team.demo</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <strong>Racoon Team</strong>
+        <p class="muted">Site vitrine demo - contenu et donnees fictifs pour maquette.</p>
+      </div>
+      <div>
+        <strong>Navigation</strong>
+        <p class="muted"><a href="#activites">Activites</a> - <a href="#terrains">Terrains</a> - <a
+            href="#adhesion">Adhesion</a></p>
+      </div>
+      <div>
+        <strong>Legal</strong>
+        <p class="muted">Mentions legales - Politique RGPD - Conditions d'utilisation</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const wrap = document.getElementById("logoWrap");
+    const svg = wrap.querySelector("svg");
+
+    const motionTokens = {
+      stiffnessNear: 102,
+      stiffnessFar: 36,
+      dampingNear: 13,
+      dampingFar: 22,
+      maxIdleAmpX: 0.62,
+      maxIdleAmpY: 0.42,
+      pointerAmpX: 1.05,
+      pointerAmpY: 0.92,
+      saccadeChance: 0.0028,
+      blinkMinMs: 2400,
+      blinkMaxMs: 6200,
+      blinkDurationMs: 150,
+      recoverMs: 420,
+      inactiveMs: 1800,
+    };
+
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reduceMotion = reduceMotionQuery.matches;
+    reduceMotionQuery.addEventListener("change", (event) => {
+      reduceMotion = event.matches;
+    });
+
+    const ellipses = [...svg.querySelectorAll("ellipse")];
+    const pupils = ellipses
+      .map((el) => ({
+        el,
+        area: (() => {
+          const bbox = el.getBBox();
+          const ctm = el.getCTM();
+          if (!ctm) return 0;
+          const scaleArea = Math.abs((ctm.a * ctm.d) - (ctm.b * ctm.c));
+          return bbox.width * bbox.height * scaleArea;
+        })(),
+      }))
+      .sort((a, b) => b.area - a.area)
+      .slice(0, 2)
+      .map((item) => item.el)
+      .sort((a, b) => {
+        const ax = a.getBoundingClientRect().left;
+        const bx = b.getBoundingClientRect().left;
+        return ax - bx;
+      });
+
+    if (pupils.length < 2) {
+      wrap.insertAdjacentHTML("beforeend", "<p style='color:var(--danger);font-size:0.95rem;'>Erreur: pupilles non trouvees.</p>");
+    } else {
+      pupils.forEach((p) => p.classList.add("pupil"));
+
+      const rand = (min, max) => Math.random() * (max - min) + min;
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const lerp = (a, b, t) => a + ((b - a) * t);
+      const now = () => performance.now();
+
+      const gaze = {
+        mode: "idle",
+        pointer: { nx: 0, ny: 0, active: false, proximity: 0, distanceNorm: 1 },
+        goal: { x: 0, y: 0 },
+        impulse: { x: 0, y: 0 },
+        idleSeed: { ax: rand(0, Math.PI * 2), ay: rand(0, Math.PI * 2) },
+        focusUntil: 0,
+        recoverUntil: 0,
+        lastInputAt: now(),
+        nextBlinkAt: now() + rand(motionTokens.blinkMinMs, motionTokens.blinkMaxMs),
+        blink: { value: 0, active: false, startAt: 0, duration: motionTokens.blinkDurationMs, doublePending: false },
+      };
+
+      const eyeRigs = pupils.map((el, index) => ({
+        el,
+        side: index === 0 ? -1 : 1,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        rx: 18,
+        ry: 10,
+      }));
+
+      function updateRigFromLayout() {
+        const logoRect = wrap.getBoundingClientRect();
+        const baseRadiusX = logoRect.width * 0.024;
+        const baseRadiusY = logoRect.height * 0.017;
+        eyeRigs.forEach((rig) => {
+          rig.rx = clamp(baseRadiusX, 9, 28);
+          rig.ry = clamp(baseRadiusY, 6, 17);
+        });
+      }
+
+      function clampToEllipse(x, y, rx, ry) {
+        const nx = x / rx;
+        const ny = y / ry;
+        const d = Math.sqrt((nx * nx) + (ny * ny));
+        if (d <= 1) return { x, y };
+        return { x: x / d, y: y / d };
+      }
+
+      function setMode(next, t) {
+        gaze.mode = next;
+        if (next === "recover") {
+          gaze.recoverUntil = t + motionTokens.recoverMs;
+        }
+      }
+
+      function scheduleBlink(t) {
+        gaze.nextBlinkAt = t + rand(motionTokens.blinkMinMs, motionTokens.blinkMaxMs);
+      }
+
+      function startBlink(t) {
+        gaze.blink.active = true;
+        gaze.blink.startAt = t;
+        gaze.blink.duration = reduceMotion ? 110 : motionTokens.blinkDurationMs + rand(-18, 16);
+      }
+
+      function updateBlink(t) {
+        if (!gaze.blink.active && t >= gaze.nextBlinkAt) {
+          startBlink(t);
+        }
+        if (!gaze.blink.active) return;
+
+        const p = clamp((t - gaze.blink.startAt) / gaze.blink.duration, 0, 1);
+        const closeOpen = p < 0.48 ? p / 0.48 : (1 - p) / 0.52;
+        gaze.blink.value = clamp(closeOpen, 0, 1);
+
+        if (p >= 1) {
+          gaze.blink.active = false;
+          gaze.blink.value = 0;
+          if (!gaze.blink.doublePending && Math.random() < 0.22 && !reduceMotion) {
+            gaze.blink.doublePending = true;
+            gaze.nextBlinkAt = t + rand(85, 150);
+          } else {
+            gaze.blink.doublePending = false;
+            scheduleBlink(t);
+          }
+        }
+      }
+
+      function updateGoal(t) {
+        const sec = t * 0.001;
+        const idleX =
+          Math.sin(sec * 0.68 + gaze.idleSeed.ax) * 0.75 +
+          Math.sin(sec * 1.11 + 1.3) * 0.35 +
+          Math.sin(sec * 0.19 + 2.0) * 0.2;
+        const idleY =
+          Math.sin(sec * 0.77 + gaze.idleSeed.ay) * 0.55 +
+          Math.sin(sec * 1.37 + 0.5) * 0.22;
+
+        const hoverBoost = gaze.pointer.active ? 0.92 + (gaze.pointer.proximity * 0.18) : 0.82;
+        const pointerWeight = gaze.pointer.active ? (0.18 + (gaze.pointer.proximity * 0.74)) : 0.08;
+        const idleWeight = 1 - pointerWeight;
+        const stateWeight = gaze.mode === "focus" ? 1.35 : gaze.mode === "tracking" ? 1 : 0.86;
+        const reduceMul = reduceMotion ? 0.35 : 1;
+
+        gaze.goal.x =
+          ((idleX * motionTokens.maxIdleAmpX * idleWeight) +
+            (gaze.pointer.nx * motionTokens.pointerAmpX * pointerWeight)) *
+          hoverBoost *
+          stateWeight *
+          reduceMul;
+        gaze.goal.y =
+          ((idleY * motionTokens.maxIdleAmpY * idleWeight) +
+            (gaze.pointer.ny * motionTokens.pointerAmpY * pointerWeight)) *
+          hoverBoost *
+          stateWeight *
+          reduceMul;
+      }
+
+      function updateState(t) {
+        if (gaze.mode === "focus" && t > gaze.focusUntil) {
+          setMode("recover", t);
+        } else if (gaze.mode === "recover" && t > gaze.recoverUntil) {
+          setMode(gaze.pointer.active ? "tracking" : "idle", t);
+        } else if (t - gaze.lastInputAt > motionTokens.inactiveMs && gaze.mode === "tracking") {
+          setMode("recover", t);
+        } else if (gaze.pointer.active && gaze.mode === "idle") {
+          setMode("tracking", t);
+        }
+      }
+
+      function updatePhysics(dt, t) {
+        const sec = t * 0.001;
+        const responsiveness = gaze.pointer.active ? (0.25 + (gaze.pointer.proximity * 0.75)) : 0.2;
+        const stiffness = lerp(motionTokens.stiffnessFar, motionTokens.stiffnessNear, responsiveness);
+        const damping = lerp(motionTokens.dampingFar, motionTokens.dampingNear, responsiveness);
+
+        if (!reduceMotion && Math.random() < motionTokens.saccadeChance && gaze.mode !== "focus") {
+          const amp = gaze.pointer.active ? 0.22 : 0.32;
+          gaze.impulse.x += rand(-1, 1) * amp;
+          gaze.impulse.y += rand(-1, 1) * amp * 0.8;
+        }
+
+        gaze.impulse.x *= 0.88;
+        gaze.impulse.y *= 0.88;
+
+        eyeRigs.forEach((rig, index) => {
+          const parallax = rig.side * 0.08;
+          const trackX = (gaze.goal.x + parallax + gaze.impulse.x) * rig.rx;
+          const trackY = (gaze.goal.y + gaze.impulse.y) * rig.ry;
+
+          const springX = (trackX - rig.x) * stiffness;
+          const springY = (trackY - rig.y) * stiffness;
+          const damperX = rig.vx * damping;
+          const damperY = rig.vy * damping;
+
+          const flutterX = reduceMotion ? 0 : Math.sin(sec * (1.8 + index * 0.24) + index) * 0.35;
+          const flutterY = reduceMotion ? 0 : Math.cos(sec * (1.55 + index * 0.3) + index) * 0.26;
+
+          rig.vx += ((springX - damperX + flutterX) * dt);
+          rig.vy += ((springY - damperY + flutterY) * dt);
+          rig.x += rig.vx * dt;
+          rig.y += rig.vy * dt;
+
+          const limited = clampToEllipse(rig.x, rig.y, rig.rx, rig.ry);
+          rig.x = limited.x;
+          rig.y = limited.y;
+        });
+      }
+
+      function render(t) {
+        const sec = t * 0.001;
+        const blinkScaleY = 1 - (gaze.blink.value * (reduceMotion ? 0.7 : 0.9));
+
+        eyeRigs.forEach((rig) => {
+          const offsetY = gaze.blink.value * -1.3;
+          const stretchX = 1 + (gaze.blink.value * 0.16);
+          rig.el.style.transform = `translate(${rig.x.toFixed(2)}px, ${(rig.y + offsetY).toFixed(2)}px) scale(${stretchX.toFixed(3)}, ${blinkScaleY.toFixed(3)})`;
+        });
+
+        const headAmp = reduceMotion ? 0.45 : 1;
+        const distHead = 0.82 + (gaze.pointer.proximity * 0.34);
+        const bobX = (Math.sin(sec * 0.41) * 1.6 + gaze.goal.x * 2.1) * headAmp * distHead;
+        const bobY = (Math.sin(sec * 0.71 + 0.6) * 2.2 + gaze.goal.y * 2.2) * headAmp * distHead;
+        const tilt = (gaze.goal.x * 1.15 + Math.sin(sec * 0.34) * 0.5) * headAmp;
+        const breath = 1 + (Math.sin(sec * 0.29) * 0.008 * headAmp);
+        svg.style.transform = `translate(${bobX.toFixed(2)}px, ${bobY.toFixed(2)}px) rotate(${tilt.toFixed(2)}deg) scale(${breath.toFixed(4)})`;
+      }
+
+      let rafId = 0;
+      let lastTime = now();
+      function tick(t) {
+        const dt = Math.min((t - lastTime) / 1000, 1 / 30);
+        lastTime = t;
+
+        if (document.hidden) {
+          rafId = requestAnimationFrame(tick);
+          return;
+        }
+
+        updateState(t);
+        updateGoal(t);
+        updateBlink(t);
+        updatePhysics(dt, t);
+        render(t);
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function setPointerFromEvent(event) {
+        const rect = wrap.getBoundingClientRect();
+        const centerX = rect.left + (rect.width / 2);
+        const centerY = rect.top + (rect.height / 2);
+        const dx = event.clientX - centerX;
+        const dy = event.clientY - centerY;
+        const nx = dx / (window.innerWidth * 0.45);
+        const ny = dy / (window.innerHeight * 0.45);
+        const distance = Math.hypot(dx, dy);
+        const maxDistance = Math.hypot(window.innerWidth, window.innerHeight) * 0.75;
+        const distanceNorm = clamp(distance / maxDistance, 0, 1);
+        const proximity = 1 - distanceNorm;
+
+        gaze.pointer.nx = clamp(nx, -1, 1);
+        gaze.pointer.ny = clamp(ny, -1, 1);
+        gaze.pointer.distanceNorm = distanceNorm;
+        gaze.pointer.proximity = proximity;
+        gaze.lastInputAt = now();
+      }
+
+      window.addEventListener("pointermove", (event) => {
+        gaze.pointer.active = true;
+        setPointerFromEvent(event);
+        if (gaze.mode !== "focus") setMode("tracking", now());
+      });
+
+      window.addEventListener("pointerleave", () => {
+        gaze.pointer.active = false;
+        gaze.lastInputAt = now();
+        if (gaze.mode !== "focus") setMode("recover", now());
+      });
+
+      window.addEventListener("click", (event) => {
+        setPointerFromEvent(event);
+        gaze.impulse.x += gaze.pointer.nx * 0.36;
+        gaze.impulse.y += gaze.pointer.ny * 0.28;
+        gaze.focusUntil = now() + (reduceMotion ? 220 : 520);
+        setMode("focus", now());
+      });
+
+      window.addEventListener("resize", updateRigFromLayout, { passive: true });
+      updateRigFromLayout();
+      rafId = requestAnimationFrame(tick);
+
+      window.addEventListener("beforeunload", () => {
+        cancelAnimationFrame(rafId);
+      });
+    }
+
+    if (!reduceMotion) {
+      const observed = document.querySelectorAll("[data-reveal]");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("in");
+          });
+        },
+        { threshold: 0.16 }
+      );
+      observed.forEach((el) => observer.observe(el));
+    } else {
+      document.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("in"));
+    }
+  </script>
+</body>
+
+</html>
