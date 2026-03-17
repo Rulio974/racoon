@@ -63,6 +63,49 @@
 
     function rand(min, max) { return Math.random() * (max - min) + min; }
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function lerp(a, b, t) { return a + ((b - a) * t); }
+
+    function animateTrail(bb, startX, startY, controlX, controlY, endX, endY, duration) {
+      const startAt = performance.now();
+      let raf = 0;
+      const speedBias = rand(-0.16, 0.18);
+      const accelBias = rand(0.82, 1.28);
+      const wobbleAmp = rand(0.18, 1.1);
+      const wobbleFreq = rand(0.8, 1.7);
+      const wobblePhase = rand(0, Math.PI * 2);
+
+      function speedCurve(t) {
+        // Randomized time-warp for non-uniform velocity per projectile.
+        const a = Math.pow(t, accelBias);
+        const b = 1 - Math.pow(1 - t, 1.08 + speedBias);
+        return clamp((a * 0.46) + (b * 0.54), 0, 1);
+      }
+
+      function step(now) {
+        const raw = clamp((now - startAt) / duration, 0, 1);
+        const p = speedCurve(raw);
+        const inv = 1 - p;
+        const baseX = (inv * inv * startX) + (2 * inv * p * controlX) + (p * p * endX);
+        const baseY = (inv * inv * startY) + (2 * inv * p * controlY) + (p * p * endY);
+        const life = Math.sin(raw * Math.PI);
+        const wobble = Math.sin((raw * Math.PI * 2 * wobbleFreq) + wobblePhase) * wobbleAmp * life;
+        const x = baseX;
+        const y = baseY + wobble;
+        const opacity = 0.82 * life;
+        const scale = 0.8 + (life * 0.2);
+        bb.style.transform = "translate(" + x.toFixed(2) + "px, " + y.toFixed(2) + "px) scale(" + scale.toFixed(3) + ")";
+        bb.style.opacity = opacity.toFixed(3);
+
+        if (raw < 1) {
+          raf = requestAnimationFrame(step);
+          return;
+        }
+        if (bb.parentNode) bb.parentNode.removeChild(bb);
+      }
+
+      raf = requestAnimationFrame(step);
+      return function cancel() { cancelAnimationFrame(raf); };
+    }
 
     function spawnTrail() {
       if (document.hidden) return;
@@ -75,31 +118,20 @@
       const startX = fromLeft ? -26 : width + 26;
       const endX = fromLeft ? width + 36 : -36;
       const startY = rand(height * 0.12, height * 0.9);
-      const endY = clamp(startY + rand(-height * 0.32, height * 0.32), 14, height - 14);
-      const midX = (startX + endX) * 0.5 + rand(-width * 0.06, width * 0.06);
-      const midY = clamp(Math.min(startY, endY) - rand(height * 0.05, height * 0.22), 8, height - 8);
+      const endYOffset = mobileQuery.matches ? rand(-height * 0.08, height * 0.08) : rand(-height * 0.24, height * 0.24);
+      const endY = clamp(startY + endYOffset, 14, height - 14);
       const size = rand(4.2, 7.2);
-      const duration = rand(1180, 1980) * (mobileQuery.matches ? 1.12 : 1);
+      const duration = rand(980, 2240) * (mobileQuery.matches ? 1.12 : 1);
+      const controlX = ((startX + endX) * 0.5) + rand(-width * 0.04, width * 0.04);
+      const arcHeight = mobileQuery.matches ? rand(height * 0.03, height * 0.07) : rand(height * 0.06, height * 0.16);
+      const controlY = clamp(Math.min(startY, endY) - arcHeight, 8, height - 8);
 
       const bb = document.createElement("span");
       bb.className = "airsoft-bb";
       bb.style.width = size.toFixed(2) + "px";
       bb.style.height = size.toFixed(2) + "px";
       layer.appendChild(bb);
-
-      const anim = bb.animate([
-        { transform: "translate(" + startX.toFixed(2) + "px, " + startY.toFixed(2) + "px) scale(0.82)", opacity: 0 },
-        { transform: "translate(" + midX.toFixed(2) + "px, " + midY.toFixed(2) + "px) scale(1)", opacity: 0.82, offset: 0.45 },
-        { transform: "translate(" + endX.toFixed(2) + "px, " + endY.toFixed(2) + "px) scale(0.86)", opacity: 0 },
-      ], {
-        duration: duration,
-        easing: "cubic-bezier(0.22, 0.74, 0.22, 1)",
-        fill: "forwards",
-      });
-
-      anim.onfinish = function () {
-        if (bb.parentNode) bb.parentNode.removeChild(bb);
-      };
+      animateTrail(bb, startX, startY, controlX, controlY, endX, endY, duration);
     }
 
     function scheduleNext() {
