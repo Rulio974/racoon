@@ -1302,6 +1302,11 @@
     reduceMotionQuery.addEventListener("change", (event) => {
       reduceMotion = event.matches;
     });
+    const mobileAutoQuery = window.matchMedia("(max-width: 980px) and (pointer: coarse)");
+    let mobileAutoMode = mobileAutoQuery.matches;
+    mobileAutoQuery.addEventListener("change", (event) => {
+      mobileAutoMode = event.matches;
+    });
 
     const ellipses = [...svg.querySelectorAll("ellipse")];
     const pupils = ellipses
@@ -1340,6 +1345,9 @@
         goal: { x: 0, y: 0 },
         impulse: { x: 0, y: 0 },
         idleSeed: { ax: rand(0, Math.PI * 2), ay: rand(0, Math.PI * 2) },
+        mobileTarget: { x: rand(-0.9, 0.9), y: rand(-0.65, 0.65) },
+        nextMobileShiftAt: now() + rand(620, 1450),
+        mobilePulse: { x: 0, y: 0 },
         focusUntil: 0,
         recoverUntil: 0,
         lastInputAt: now(),
@@ -1418,6 +1426,35 @@
 
       function updateGoal(t) {
         const sec = t * 0.001;
+        const mobileMode = mobileAutoMode && !reduceMotion;
+
+        if (mobileMode) {
+          if (t >= gaze.nextMobileShiftAt) {
+            gaze.mobileTarget.x = rand(-0.95, 0.95);
+            gaze.mobileTarget.y = rand(-0.72, 0.72);
+            gaze.mobilePulse.x = rand(-0.34, 0.34);
+            gaze.mobilePulse.y = rand(-0.24, 0.24);
+            gaze.nextMobileShiftAt = t + rand(650, 1600);
+          }
+
+          gaze.mobilePulse.x *= 0.93;
+          gaze.mobilePulse.y *= 0.93;
+
+          const driftX = Math.sin(sec * 0.95 + gaze.idleSeed.ax) * 0.22 + Math.sin(sec * 1.71 + 0.6) * 0.14;
+          const driftY = Math.sin(sec * 0.86 + gaze.idleSeed.ay) * 0.19 + Math.cos(sec * 1.44 + 0.9) * 0.12;
+
+          gaze.pointer.nx += ((gaze.mobileTarget.x + driftX + gaze.mobilePulse.x) - gaze.pointer.nx) * 0.048;
+          gaze.pointer.ny += ((gaze.mobileTarget.y + driftY + gaze.mobilePulse.y) - gaze.pointer.ny) * 0.048;
+          gaze.pointer.active = true;
+          gaze.pointer.proximity = 0.96;
+          gaze.pointer.distanceNorm = 0.04;
+          gaze.lastInputAt = t;
+
+          if (gaze.mode !== "focus" && gaze.mode !== "tracking") {
+            setMode("tracking", t);
+          }
+        }
+
         const idleX =
           Math.sin(sec * 0.68 + gaze.idleSeed.ax) * 0.75 +
           Math.sin(sec * 1.11 + 1.3) * 0.35 +
@@ -1426,11 +1463,15 @@
           Math.sin(sec * 0.77 + gaze.idleSeed.ay) * 0.55 +
           Math.sin(sec * 1.37 + 0.5) * 0.22;
 
-        const hoverBoost = gaze.pointer.active ? 0.92 + (gaze.pointer.proximity * 0.18) : 0.82;
-        const pointerWeight = gaze.pointer.active ? (0.18 + (gaze.pointer.proximity * 0.74)) : 0.08;
+        const hoverBoost = gaze.pointer.active
+          ? (mobileMode ? 1.18 : 0.92 + (gaze.pointer.proximity * 0.18))
+          : 0.82;
+        const pointerWeight = gaze.pointer.active
+          ? (mobileMode ? 0.92 : 0.18 + (gaze.pointer.proximity * 0.74))
+          : 0.08;
         const idleWeight = 1 - pointerWeight;
         const stateWeight = gaze.mode === "focus" ? 1.35 : gaze.mode === "tracking" ? 1 : 0.86;
-        const reduceMul = reduceMotion ? 0.35 : 1;
+        const reduceMul = reduceMotion ? 0.35 : (mobileMode ? 1.15 : 1);
 
         gaze.goal.x =
           ((idleX * motionTokens.maxIdleAmpX * idleWeight) +
@@ -1460,11 +1501,15 @@
 
       function updatePhysics(dt, t) {
         const sec = t * 0.001;
-        const responsiveness = gaze.pointer.active ? (0.25 + (gaze.pointer.proximity * 0.75)) : 0.2;
+        const mobileMode = mobileAutoMode && !reduceMotion;
+        const responsiveness = mobileMode
+          ? 0.98
+          : (gaze.pointer.active ? (0.25 + (gaze.pointer.proximity * 0.75)) : 0.2);
         const stiffness = lerp(motionTokens.stiffnessFar, motionTokens.stiffnessNear, responsiveness);
         const damping = lerp(motionTokens.dampingFar, motionTokens.dampingNear, responsiveness);
 
-        if (!reduceMotion && Math.random() < motionTokens.saccadeChance && gaze.mode !== "focus") {
+        const saccadeChance = mobileMode ? motionTokens.saccadeChance * 2.1 : motionTokens.saccadeChance;
+        if (!reduceMotion && Math.random() < saccadeChance && gaze.mode !== "focus") {
           const amp = gaze.pointer.active ? 0.22 : 0.32;
           gaze.impulse.x += rand(-1, 1) * amp;
           gaze.impulse.y += rand(-1, 1) * amp * 0.8;
