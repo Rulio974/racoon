@@ -1302,7 +1302,7 @@
     reduceMotionQuery.addEventListener("change", (event) => {
       reduceMotion = event.matches;
     });
-    const mobileAutoQuery = window.matchMedia("(max-width: 980px) and (pointer: coarse)");
+    const mobileAutoQuery = window.matchMedia("(max-width: 980px)");
     let mobileAutoMode = mobileAutoQuery.matches;
     mobileAutoQuery.addEventListener("change", (event) => {
       mobileAutoMode = event.matches;
@@ -1429,25 +1429,20 @@
         const mobileMode = mobileAutoMode && !reduceMotion;
 
         if (mobileMode) {
-          if (t >= gaze.nextMobileShiftAt) {
-            gaze.mobileTarget.x = rand(-0.95, 0.95);
-            gaze.mobileTarget.y = rand(-0.72, 0.72);
-            gaze.mobilePulse.x = rand(-0.34, 0.34);
-            gaze.mobilePulse.y = rand(-0.24, 0.24);
-            gaze.nextMobileShiftAt = t + rand(650, 1600);
-          }
+          // Mobile: animation autonome ample, majoritairement gauche/droite.
+          const wideX =
+            Math.sin(sec * 0.9 + gaze.idleSeed.ax) * 0.95 +
+            Math.sin(sec * 0.43 + 1.1) * 0.42 +
+            Math.sin(sec * 1.8 + 0.35) * 0.12;
+          const softY =
+            Math.sin(sec * 0.62 + gaze.idleSeed.ay) * 0.22 +
+            Math.sin(sec * 1.14 + 2.2) * 0.08;
 
-          gaze.mobilePulse.x *= 0.93;
-          gaze.mobilePulse.y *= 0.93;
-
-          const driftX = Math.sin(sec * 0.95 + gaze.idleSeed.ax) * 0.22 + Math.sin(sec * 1.71 + 0.6) * 0.14;
-          const driftY = Math.sin(sec * 0.86 + gaze.idleSeed.ay) * 0.19 + Math.cos(sec * 1.44 + 0.9) * 0.12;
-
-          gaze.pointer.nx += ((gaze.mobileTarget.x + driftX + gaze.mobilePulse.x) - gaze.pointer.nx) * 0.048;
-          gaze.pointer.ny += ((gaze.mobileTarget.y + driftY + gaze.mobilePulse.y) - gaze.pointer.ny) * 0.048;
+          gaze.pointer.nx += (wideX - gaze.pointer.nx) * 0.062;
+          gaze.pointer.ny += (softY - gaze.pointer.ny) * 0.05;
           gaze.pointer.active = true;
-          gaze.pointer.proximity = 0.96;
-          gaze.pointer.distanceNorm = 0.04;
+          gaze.pointer.proximity = 1;
+          gaze.pointer.distanceNorm = 0;
           gaze.lastInputAt = t;
 
           if (gaze.mode !== "focus" && gaze.mode !== "tracking") {
@@ -1464,10 +1459,10 @@
           Math.sin(sec * 1.37 + 0.5) * 0.22;
 
         const hoverBoost = gaze.pointer.active
-          ? (mobileMode ? 1.18 : 0.92 + (gaze.pointer.proximity * 0.18))
+          ? (mobileMode ? 1.22 : 0.92 + (gaze.pointer.proximity * 0.18))
           : 0.82;
         const pointerWeight = gaze.pointer.active
-          ? (mobileMode ? 0.92 : 0.18 + (gaze.pointer.proximity * 0.74))
+          ? (mobileMode ? 0.97 : 0.18 + (gaze.pointer.proximity * 0.74))
           : 0.08;
         const idleWeight = 1 - pointerWeight;
         const stateWeight = gaze.mode === "focus" ? 1.35 : gaze.mode === "tracking" ? 1 : 0.86;
@@ -1581,6 +1576,7 @@
       }
 
       function setPointerFromEvent(event) {
+        if (mobileAutoMode) return;
         const rect = wrap.getBoundingClientRect();
         const centerX = rect.left + (rect.width / 2);
         const centerY = rect.top + (rect.height / 2);
@@ -1601,18 +1597,21 @@
       }
 
       window.addEventListener("pointermove", (event) => {
+        if (mobileAutoMode) return;
         gaze.pointer.active = true;
         setPointerFromEvent(event);
         if (gaze.mode !== "focus") setMode("tracking", now());
       });
 
       window.addEventListener("pointerleave", () => {
+        if (mobileAutoMode) return;
         gaze.pointer.active = false;
         gaze.lastInputAt = now();
         if (gaze.mode !== "focus") setMode("recover", now());
       });
 
       window.addEventListener("click", (event) => {
+        if (mobileAutoMode) return;
         setPointerFromEvent(event);
         gaze.impulse.x += gaze.pointer.nx * 0.36;
         gaze.impulse.y += gaze.pointer.ny * 0.28;
