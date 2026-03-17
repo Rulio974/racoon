@@ -112,6 +112,89 @@
       color: var(--ink-strong);
     }
 
+    .burger-btn {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(195, 208, 172, 0.3);
+      background: rgba(183, 198, 160, 0.08);
+      color: var(--ink-strong);
+      cursor: pointer;
+      align-items: center;
+      justify-items: center;
+      gap: 4px;
+      padding: 0;
+    }
+
+    .burger-btn span {
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      display: block;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .mobile-menu-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 23, 19, 0.54);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .mobile-menu-panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: min(84vw, 340px);
+      height: 100%;
+      background: linear-gradient(180deg, rgba(40, 60, 51, 0.98), rgba(31, 48, 41, 0.98));
+      border-left: 1px solid var(--line);
+      padding: 82px 18px 20px;
+      transform: translateX(104%);
+      transition: transform 240ms ease;
+      box-shadow: -12px 0 28px rgba(0, 0, 0, 0.25);
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .mobile-menu-nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .mobile-menu-nav a {
+      display: block;
+      padding: 11px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(195, 208, 172, 0.16);
+      color: var(--ink-strong);
+      background: rgba(183, 198, 160, 0.04);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .mobile-menu.is-open {
+      pointer-events: auto;
+    }
+
+    .mobile-menu.is-open .mobile-menu-backdrop {
+      opacity: 1;
+    }
+
+    .mobile-menu.is-open .mobile-menu-panel {
+      transform: translateX(0);
+    }
+
     .section-shell {
       width: min(1120px, 92vw);
       margin: 0 auto;
@@ -645,6 +728,10 @@
         display: none;
       }
 
+      .burger-btn {
+        display: inline-grid;
+      }
+
       .stage {
         width: min(88vw, 510px);
       }
@@ -686,8 +773,26 @@
         <a href="#adhesion">Adhesion</a>
         <a href="#contact">Contact</a>
       </nav>
+      <button class="burger-btn" id="burgerBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-backdrop" id="mobileBackdrop"></div>
+    <aside class="mobile-menu-panel" role="dialog" aria-label="Menu mobile">
+      <nav class="mobile-menu-nav" aria-label="Navigation mobile">
+        <a href="#apropos">Association</a>
+        <a href="#activites">Activites</a>
+        <a href="#terrains">Terrains</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#adhesion">Adhesion</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </aside>
+  </div>
 
   <main>
     <section class="hero" id="accueil">
@@ -1105,6 +1210,40 @@
   </footer>
 
   <script>
+    const burgerBtn = document.getElementById("burgerBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const mobileBackdrop = document.getElementById("mobileBackdrop");
+    const mobileLinks = mobileMenu ? mobileMenu.querySelectorAll("a") : [];
+
+    function setMenuState(open) {
+      if (!mobileMenu || !burgerBtn) return;
+      mobileMenu.classList.toggle("is-open", open);
+      mobileMenu.setAttribute("aria-hidden", open ? "false" : "true");
+      burgerBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.style.overflow = open ? "hidden" : "";
+    }
+
+    if (burgerBtn && mobileMenu && mobileBackdrop) {
+      burgerBtn.addEventListener("click", () => {
+        const isOpen = mobileMenu.classList.contains("is-open");
+        setMenuState(!isOpen);
+      });
+
+      mobileBackdrop.addEventListener("click", () => setMenuState(false));
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => setMenuState(false));
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenuState(false);
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 720) setMenuState(false);
+      });
+    }
+
     const wrap = document.getElementById("logoWrap");
     const svg = wrap.querySelector("svg");
 
