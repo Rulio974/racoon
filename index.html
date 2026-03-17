@@ -1345,6 +1345,7 @@
         goal: { x: 0, y: 0 },
         impulse: { x: 0, y: 0 },
         idleSeed: { ax: rand(0, Math.PI * 2), ay: rand(0, Math.PI * 2) },
+        mobileSide: Math.random() < 0.5 ? -1 : 1,
         mobileTarget: { x: rand(-0.9, 0.9), y: rand(-0.65, 0.65) },
         nextMobileShiftAt: now() + rand(620, 1450),
         mobilePulse: { x: 0, y: 0 },
@@ -1429,17 +1430,32 @@
         const mobileMode = mobileAutoMode && !reduceMotion;
 
         if (mobileMode) {
-          // Mobile: animation autonome ample, majoritairement gauche/droite.
-          const wideX =
-            Math.sin(sec * 0.9 + gaze.idleSeed.ax) * 0.95 +
-            Math.sin(sec * 0.43 + 1.1) * 0.42 +
-            Math.sin(sec * 1.8 + 0.35) * 0.12;
-          const softY =
-            Math.sin(sec * 0.62 + gaze.idleSeed.ay) * 0.22 +
-            Math.sin(sec * 1.14 + 2.2) * 0.08;
+          // Regard "suspicieux": alternance gauche/droite avec pauses et micro-tremblements.
+          if (t >= gaze.nextMobileShiftAt) {
+            const alternate = Math.random() < 0.82 ? -1 : 1;
+            gaze.mobileSide = gaze.mobileSide * alternate;
+            gaze.mobileTarget.x = gaze.mobileSide * rand(0.72, 1.08);
+            gaze.mobileTarget.y = rand(-0.18, 0.12);
+            gaze.mobilePulse.x = rand(-0.22, 0.22);
+            gaze.mobilePulse.y = rand(-0.08, 0.08);
+            gaze.nextMobileShiftAt = t + rand(520, 1450);
+          }
 
-          gaze.pointer.nx += (wideX - gaze.pointer.nx) * 0.062;
-          gaze.pointer.ny += (softY - gaze.pointer.ny) * 0.05;
+          gaze.mobilePulse.x *= 0.92;
+          gaze.mobilePulse.y *= 0.9;
+
+          const driftX =
+            Math.sin(sec * 0.84 + gaze.idleSeed.ax) * 0.12 +
+            Math.sin(sec * 1.56 + 0.9) * 0.08;
+          const driftY =
+            Math.sin(sec * 0.54 + gaze.idleSeed.ay) * 0.1 +
+            Math.cos(sec * 1.02 + 1.7) * 0.05;
+
+          const targetX = gaze.mobileTarget.x + gaze.mobilePulse.x + driftX;
+          const targetY = gaze.mobileTarget.y + gaze.mobilePulse.y + driftY;
+
+          gaze.pointer.nx += (targetX - gaze.pointer.nx) * 0.082;
+          gaze.pointer.ny += (targetY - gaze.pointer.ny) * 0.058;
           gaze.pointer.active = true;
           gaze.pointer.proximity = 1;
           gaze.pointer.distanceNorm = 0;
