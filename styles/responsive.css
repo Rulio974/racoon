@@ -1,0 +1,92 @@
+@media (max-width: 980px) {
+  section.content {
+    --section-glow-opacity: 0.42;
+    --section-pattern-opacity: 0.12;
+  }
+
+  section.content::after {
+    filter: none;
+  }
+
+  .about-grid,
+  .security-grid,
+  .contact-grid,
+  .terrain,
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .terrain:nth-child(even) .terrain-media {
+    order: 0;
+  }
+
+  .cards-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-card.featured {
+    transform: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .burger-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 720px) {
+  section.content {
+    --section-glow-opacity: 0.32;
+    --section-pattern-opacity: 0.08;
+  }
+
+  .stage {
+    width: min(88vw, 510px);
+  }
+
+  .brand {
+    letter-spacing: 0.16em;
+  }
+
+  .cards-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero .hero-kicker,
+  .hero .brand,
+  .hero .hero-sub,
+  .hero .hero-cta {
+    transition: opacity 220ms ease, transform 220ms ease, filter 220ms ease;
+  }
+
+  .hero.is-intro .hero-kicker,
+  .hero.is-intro .brand,
+  .hero.is-intro .hero-sub,
+  .hero.is-intro .hero-cta {
+    transform: translateY(8px);
+    filter: none;
+  }
+
+  #activites .airsoft-trails {
+    display: none;
+  }
+}

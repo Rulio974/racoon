@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "AllertaStencil";
+  src: url("../AllertaStencil-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #344e41;
+  --panel: #2c4438;
+  --line: rgba(195, 208, 172, 0.2);
+  --ink: #b7c6a0;
+  --ink-strong: #d3dec1;
+  --ink-muted: #a7b89a;
+  --ink-dark: #2f453a;
+  --danger: #d98f8f;
+  --shadow: 0 20px 42px rgba(13, 22, 18, 0.25);
+  --radius: 16px;
+  --section-wash-top: rgba(183, 198, 160, 0.02);
+  --section-wash-bottom: rgba(18, 30, 25, 0.07);
+  --section-glow-opacity: 0.55;
+  --section-pattern-opacity: 0.2;
+  --section-pattern-blur: 0px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.section-shell {
+  width: min(1120px, 92vw);
+  margin: 0 auto;
+}
+
+.muted {
+  color: var(--ink-muted);
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 560ms ease, transform 560ms ease;
+}
+
+[data-reveal].in {
+  opacity: 1;
+  transform: translateY(0);
+}

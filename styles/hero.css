@@ -1,0 +1,180 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding-top: 70px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../IMG_0392-2400x1200.jpg") center center / cover no-repeat;
+  opacity: 0.09;
+  filter: saturate(0.85) contrast(0.92);
+  z-index: -3;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(61, 90, 77, 0.15), rgba(52, 78, 65, 0.56) 64%, rgba(35, 54, 45, 0.72)),
+    linear-gradient(180deg, rgba(26, 40, 34, 0.12), rgba(26, 40, 34, 0.45));
+  z-index: -2;
+}
+
+.hero-content {
+  width: min(92vw, 820px);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: clamp(20px, 5vw, 50px) 16px;
+}
+
+.logo-aura {
+  position: absolute;
+  width: min(62vw, 620px);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgba(195, 208, 172, 0.16), rgba(195, 208, 172, 0) 66%);
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.stage {
+  width: min(70vw, 530px);
+  display: grid;
+  place-items: center;
+}
+
+.logo-wrap {
+  width: 100%;
+  aspect-ratio: 3415 / 2723;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 10px 22px rgba(20, 30, 26, 0.38));
+}
+
+.logo-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.pupil {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, filter;
+}
+
+.hero-kicker {
+  margin: 0;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(2.4rem, 8.6vw, 5.6rem);
+  font-family: "AllertaStencil", Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(20, 30, 26, 0.22);
+  line-height: 1;
+}
+
+.hero-sub {
+  margin: 4px 0 6px;
+  max-width: 66ch;
+  color: var(--ink-muted);
+  font-size: 1rem;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, border-color 180ms ease;
+}
+
+.btn-primary {
+  color: var(--ink-dark);
+  background: var(--ink);
+  box-shadow: 0 8px 20px rgba(14, 23, 19, 0.24);
+}
+
+.btn-secondary {
+  color: var(--ink-strong);
+  background: rgba(183, 198, 160, 0.08);
+  border-color: var(--line);
+  backdrop-filter: blur(8px);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.hero .hero-kicker,
+.hero .brand,
+.hero .hero-sub,
+.hero .hero-cta {
+  transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1), filter 340ms ease;
+}
+
+.hero.is-intro .hero-kicker,
+.hero.is-intro .brand,
+.hero.is-intro .hero-sub,
+.hero.is-intro .hero-cta {
+  opacity: 0;
+  transform: translateY(12px) scale(0.985);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.hero.intro-done .hero-kicker,
+.hero.intro-done .brand,
+.hero.intro-done .hero-sub,
+.hero.intro-done .hero-cta {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.hero.is-intro .logo-aura {
+  opacity: 1;
+  filter: blur(13px) saturate(1.08);
+}
+
+.hero.is-intro .logo-wrap {
+  filter: drop-shadow(0 30px 64px rgba(11, 18, 15, 0.55));
+}
